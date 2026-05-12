@@ -1,0 +1,19 @@
+# dependencies
+node_modules
+
+# env files
+.env
+
+# builds
+dist
+build
+
+# prisma cache only
+node_modules/.prisma
+
+# OS
+.DS_Store
+
+# IDE
+.vscode
+.idea
