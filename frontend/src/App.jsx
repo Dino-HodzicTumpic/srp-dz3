@@ -1,7 +1,3 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "./assets/vite.svg";
-import heroImg from "./assets/hero.png";
 import "./App.css";
 import ParkingsListPage from "./pages/ParkingsListPage";
 import { BrowserRouter } from "react-router-dom";
@@ -9,11 +5,13 @@ import { Routes, Route } from "react-router-dom";
 import ParkingMasterDetailPage from "./pages/ParkingMasterDetailPage";
 import ParkingZonesPage from "./pages/ParkingZonesPage";
 import ReservationsPage from "./pages/ReservationsPage";
+import Navbar from "./components/shared/Navbar";
 
 function App() {
   return (
     <div className="relative min-h-screen">
       <BrowserRouter>
+        <Navbar />
         <Routes>
           <Route path="/" element={<ParkingsListPage />} />
           <Route path="/parkings" element={<ParkingsListPage />} />
