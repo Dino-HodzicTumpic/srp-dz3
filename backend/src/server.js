@@ -1,15 +1,17 @@
 import app from "./app.js";
-import prisma from "./config/prisma.js";
-import express from "express";
+import parkingRoutes from "./routes/parkingRoutes.js";
+import parkingSpaceRoutes from "./routes/parkingSpaceRoutes.js";
+import parkingZoneRoutes from "./routes/parkingZoneRoutes.js";
+import reservationRoutes from "./routes/reservationRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
+import vehicleRoutes from "./routes/vehicleRoutes.js";
 
-app.get("/test", async (req, res) => {
-  try {
-    const parkings = await prisma.parkings.findMany();
-    res.json(parkings);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
+app.use("/api/parkings", parkingRoutes);
+app.use("/api/parking-spaces", parkingSpaceRoutes);
+app.use("/api/parking-zones", parkingZoneRoutes);
+app.use("/api/reservations", reservationRoutes);
+app.use("/api/users", userRoutes);
+app.use("/api/vehicles", vehicleRoutes);
 
 app.listen(3000, () => {
   console.log("Server running on 3000");
