@@ -28,9 +28,6 @@
   },
   "jest": {
     "testEnvironment": "node",
-    "extensionsToTreatAsEsm": [
-      ".js"
-    ],
     "clearMocks": true
   }
 }

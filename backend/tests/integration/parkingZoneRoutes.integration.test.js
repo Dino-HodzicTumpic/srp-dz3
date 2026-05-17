@@ -73,7 +73,7 @@ describe("parking zone routes integration", () => {
 
     const response = await request(app)
       .put("/api/parking-zones/4")
-      .send({ name: "Z4A", price_per_hour: 2, description: null });
+      .send({ name: "Z4", price_per_hour: 2, description: null });
 
     expect(response.status).toBe(200);
     expect(response.body).toEqual({ id: 4, name: "Z4A" });
