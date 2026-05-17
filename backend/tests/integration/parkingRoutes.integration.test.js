@@ -31,7 +31,9 @@ describe("parking routes integration", () => {
     const response = await request(app).get("/api/parkings");
 
     expect(response.status).toBe(200);
-    expect(response.body).toEqual([{ id: 1, name: "Central" }]);
+    expect(response.body).toEqual([
+      { id: 1, name: "Central", total_spaces: 0 },
+    ]);
     expect(prismaMock.parkings.findMany).toHaveBeenCalledTimes(1);
   });
 
@@ -41,7 +43,7 @@ describe("parking routes integration", () => {
     const response = await request(app).get("/api/parkings/2");
 
     expect(response.status).toBe(200);
-    expect(response.body).toEqual({ id: 2, name: "East" });
+    expect(response.body).toEqual({ id: 2, name: "East", total_spaces: 0 });
     expect(prismaMock.parkings.findUnique).toHaveBeenCalledTimes(1);
   });
 
@@ -52,11 +54,10 @@ describe("parking routes integration", () => {
       zone_id: 1,
       name: "West",
       location: "Loc",
-      total_spaces: 10,
     });
 
     expect(response.status).toBe(201);
-    expect(response.body).toEqual({ id: 3, name: "West" });
+    expect(response.body).toEqual({ id: 3, name: "West", total_spaces: 0 });
     expect(prismaMock.parkings.create).toHaveBeenCalledTimes(1);
   });
 
@@ -69,7 +70,7 @@ describe("parking routes integration", () => {
       .send({ name: "New" });
 
     expect(response.status).toBe(200);
-    expect(response.body).toEqual({ id: 4, name: "New" });
+    expect(response.body).toEqual({ id: 4, name: "New", total_spaces: 0 });
     expect(prismaMock.parkings.update).toHaveBeenCalledTimes(1);
   });
 

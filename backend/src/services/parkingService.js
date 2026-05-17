@@ -16,8 +16,26 @@ const parseId = (value, label) => {
   return parsed;
 };
 
+const withComputedTotalSpaces = (parking) => {
+  if (!parking) {
+    return parking;
+  }
+  const totalSpaces = Array.isArray(parking.parkingspaces)
+    ? parking.parkingspaces.length
+    : 0;
+  return { ...parking, total_spaces: totalSpaces };
+};
+
+const withComputedTotalSpacesList = (parkings) => {
+  if (!Array.isArray(parkings)) {
+    return parkings;
+  }
+  return parkings.map((parking) => withComputedTotalSpaces(parking));
+};
+
 export const getAllParkings = async () => {
-  return findAllParkings();
+  const parkings = await findAllParkings();
+  return withComputedTotalSpacesList(parkings);
 };
 
 export const getParkingById = async (id) => {
@@ -30,19 +48,20 @@ export const getParkingById = async (id) => {
     throw error;
   }
 
-  return parking;
+  return withComputedTotalSpaces(parking);
 };
 
 export const createParkingEntry = async (payload) => {
-  const { zone_id, name, location, total_spaces } = payload;
+  const { zone_id, name, location } = payload;
   const parsedZoneId = parseId(zone_id, "zone");
 
-  return createParking({
+  const created = await createParking({
     zone_id: parsedZoneId,
     name,
     location,
-    total_spaces,
   });
+
+  return withComputedTotalSpaces(created);
 };
 
 export const updateParkingEntry = async (id, payload) => {
@@ -64,11 +83,9 @@ export const updateParkingEntry = async (id, payload) => {
   if (payload.location !== undefined) {
     data.location = payload.location;
   }
-  if (payload.total_spaces !== undefined) {
-    data.total_spaces = payload.total_spaces;
-  }
 
-  return updateParking(parsedId, data);
+  const updated = await updateParking(parsedId, data);
+  return withComputedTotalSpaces(updated);
 };
 
 export const deleteParkingEntry = async (id) => {

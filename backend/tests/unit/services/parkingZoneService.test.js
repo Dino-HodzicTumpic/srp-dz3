@@ -17,6 +17,23 @@ const service = await import("../../../src/services/parkingZoneService.js");
 const repo = await import("../../../src/repositories/parkingZoneRepository.js");
 
 describe("parkingZoneService", () => {
+  test("getAllParkingZones returns list", async () => {
+    repo.findAllParkingZones.mockResolvedValue([{ id: 1 }]);
+
+    const result = await service.getAllParkingZones();
+
+    expect(result).toEqual([{ id: 1 }]);
+  });
+
+  test("getParkingZoneById rejects missing record", async () => {
+    repo.findParkingZoneById.mockResolvedValue(null);
+
+    await expect(service.getParkingZoneById("9")).rejects.toMatchObject({
+      statusCode: 404,
+      message: "Parking zone not found",
+    });
+  });
+
   test("createParkingZoneEntry rejects invalid name", async () => {
     await expect(
       service.createParkingZoneEntry({ name: "zone", price_per_hour: 1 }),
@@ -55,5 +72,47 @@ describe("parkingZoneService", () => {
       statusCode: 409,
       message: "Cannot delete parking zone that is used by existing parkings",
     });
+  });
+
+  test("createParkingZoneEntry creates new zone", async () => {
+    repo.findParkingZoneByName.mockResolvedValue(null);
+    repo.createParkingZone.mockResolvedValue({ id: 3, name: "Z3" });
+
+    const result = await service.createParkingZoneEntry({
+      name: "Z3",
+      price_per_hour: 2,
+      description: "Opis",
+    });
+
+    expect(result).toEqual({ id: 3, name: "Z3" });
+  });
+
+  test("updateParkingZoneEntry updates zone", async () => {
+    repo.findParkingZoneById.mockResolvedValue({
+      id: 4,
+      name: "Z4",
+      price_per_hour: 2,
+      description: null,
+    });
+    repo.findParkingZoneByName.mockResolvedValue(null);
+    repo.updateParkingZone.mockResolvedValue({ id: 4, name: "Z4A" });
+
+    const result = await service.updateParkingZoneEntry("4", {
+      name: "Z4A",
+      price_per_hour: 2,
+      description: null,
+    });
+
+    expect(result).toEqual({ id: 4, name: "Z4A" });
+  });
+
+  test("deleteParkingZoneEntry deletes zone", async () => {
+    repo.findParkingZoneById.mockResolvedValue({ id: 5, name: "Z5" });
+    repo.countParkingsByZone.mockResolvedValue(0);
+    repo.deleteParkingZone.mockResolvedValue({ id: 5 });
+
+    const result = await service.deleteParkingZoneEntry("5");
+
+    expect(result).toEqual({ id: 5 });
   });
 });

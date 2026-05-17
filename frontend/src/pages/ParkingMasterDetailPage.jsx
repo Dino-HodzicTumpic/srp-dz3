@@ -119,12 +119,17 @@ export default function ParkingMasterDetailsPage() {
     return <div className="p-6">Error: {parkingError.message}</div>;
   }
 
+  const totalSpaces = isNew
+    ? 0
+    : (spaces?.length ?? parking?.parkingspaces?.length ?? 0);
+
   return (
     <div className="mx-auto flex w-11/12 max-w-5xl flex-col gap-6 py-8">
       <ParkingMasterForm
         parking={parking}
         zones={zones}
         zonesLoading={isZonesLoading}
+        totalSpaces={totalSpaces}
         onSave={(values) =>
           isNew
             ? createParkingMutation.mutate(values)

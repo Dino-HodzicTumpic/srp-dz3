@@ -44,4 +44,43 @@ describe("parkingRepository", () => {
       },
     });
   });
+
+  test("createParking includes relations", async () => {
+    prismaMock.parkings.create.mockResolvedValue({ id: 10 });
+
+    await repository.createParking({ name: "A" });
+
+    expect(prismaMock.parkings.create).toHaveBeenCalledWith({
+      data: { name: "A" },
+      include: {
+        parkingzones: true,
+        parkingspaces: true,
+      },
+    });
+  });
+
+  test("updateParking includes relations", async () => {
+    prismaMock.parkings.update.mockResolvedValue({ id: 11 });
+
+    await repository.updateParking(11, { name: "B" });
+
+    expect(prismaMock.parkings.update).toHaveBeenCalledWith({
+      where: { id: 11 },
+      data: { name: "B" },
+      include: {
+        parkingzones: true,
+        parkingspaces: true,
+      },
+    });
+  });
+
+  test("deleteParking deletes by id", async () => {
+    prismaMock.parkings.delete.mockResolvedValue({ id: 12 });
+
+    await repository.deleteParking(12);
+
+    expect(prismaMock.parkings.delete).toHaveBeenCalledWith({
+      where: { id: 12 },
+    });
+  });
 });

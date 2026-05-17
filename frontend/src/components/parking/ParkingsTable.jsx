@@ -17,6 +17,13 @@ export default function ParkingsTable({ parkings }) {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
+  const getTotalSpaces = (parking) => {
+    if (Array.isArray(parking.parkingspaces)) {
+      return parking.parkingspaces.length;
+    }
+    return parking.total_spaces ?? 0;
+  };
+
   const deleteMutation = useMutation({
     mutationFn: (id) => deleteParking(id),
     onSuccess: () => {
@@ -62,7 +69,7 @@ export default function ParkingsTable({ parkings }) {
             <TableCell>{parking.parkingzones.name}</TableCell>
             <TableCell>{parking.name}</TableCell>
             <TableCell>{parking.location}</TableCell>
-            <TableCell>{parking.total_spaces}</TableCell>
+            <TableCell>{getTotalSpaces(parking)}</TableCell>
             <TableCell>
               <Button
                 variant="default"

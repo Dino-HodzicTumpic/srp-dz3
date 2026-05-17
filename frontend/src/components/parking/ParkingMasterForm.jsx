@@ -6,6 +6,7 @@ export default function ParkingMasterForm({
   parking,
   zones,
   zonesLoading,
+  totalSpaces = 0,
   onSave,
   onDelete,
   isSaving,
@@ -24,7 +25,6 @@ export default function ParkingMasterForm({
       zone_id: parking?.zone_id ?? "",
       name: parking?.name ?? "",
       location: parking?.location ?? "",
-      total_spaces: parking?.total_spaces ?? 0,
     },
   });
 
@@ -33,7 +33,6 @@ export default function ParkingMasterForm({
       zone_id: parking?.zone_id ?? "",
       name: parking?.name ?? "",
       location: parking?.location ?? "",
-      total_spaces: parking?.total_spaces ?? 0,
     });
   }, [parking, reset]);
 
@@ -139,26 +138,15 @@ export default function ParkingMasterForm({
           )}
         </label>
 
-        <label className="flex flex-col gap-1 text-sm">
-          Ukupno mjesta
-          <input
-            type="number"
-            className={`rounded border px-3 py-2 ${
-              errors.total_spaces ? "border-red-500" : "border-slate-200"
-            }`}
-            {...register("total_spaces", {
-              required: "Ukupno mjesta je obavezno",
-              valueAsNumber: true,
-              min: { value: 0, message: "Ne moze biti negativno" },
-              max: { value: 10000, message: "Prevelik broj" },
-            })}
-          />
-          {errors.total_spaces && (
-            <span className="text-xs text-red-600">
-              {errors.total_spaces.message}
-            </span>
-          )}
-        </label>
+        <div className="flex flex-col gap-1 text-sm">
+          <span>Ukupno mjesta</span>
+          <div className="rounded border border-slate-200 bg-slate-50 px-3 py-2 text-slate-700">
+            {Number.isFinite(totalSpaces) ? totalSpaces : 0}
+          </div>
+          <span className="text-xs text-slate-500">
+            Automatski izracunato prema broju mjesta.
+          </span>
+        </div>
       </div>
     </form>
   );
